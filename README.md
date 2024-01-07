@@ -18,4 +18,13 @@
 docker-compose up -d
 ```
 
-6. Levantar: `npm run start:dev` o `yarn start:dev`
+6. Ejecutar seed
+
+```
+http://localhost:4000/api/seed
+```
+
+7. Levantar el proyecto en local: `npm run start:dev` o `yarn start:dev`
+
+Este proyecto tomo conceptos desde la seccion 10, leccion 121 hasta...
+{insertar cada concepto estudiado en lista aca}
