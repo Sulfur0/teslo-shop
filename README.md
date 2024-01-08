@@ -28,3 +28,9 @@ http://localhost:4000/api/seed
 
 Este proyecto tomo conceptos desde la seccion 10, leccion 121 hasta...
 {insertar cada concepto estudiado en lista aca}
+
+## Bonus
+
+### Nest.js File Upload to AWS S3 + Rate Limiting
+
+https://www.youtube.com/watch?v=tEZERHLge-U

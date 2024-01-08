@@ -8,7 +8,7 @@ import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     /**
      * Con este metodo tiene todas las configuraciones para nuestra conexión
      * con la BD (puedes ver todas las opciones que nos ofrece typeOrm acá:
