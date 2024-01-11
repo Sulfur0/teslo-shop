@@ -9,7 +9,7 @@ import { Product, ProductImage } from './entities';
   providers: [ProductsService],
   // Se registra la entidad en el módulo donde se configura, Product pertenece a ProductsModule
   // Solo en este caso se utiliza el forFeature de TypeOrmModule
-  imports: [TypeOrmModule.forFeature([Product, ProductImage])],
-  exports: [ProductsService, TypeOrmModule],
+  imports: [TypeOrmModule.forFeature([Product, ProductImage])], // crea las tablas en base de datos
+  exports: [ProductsService, TypeOrmModule], // permite que User pueda ser usado fuera de este modulo
 })
 export class ProductsModule {}

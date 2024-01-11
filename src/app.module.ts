@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,13 +27,14 @@ import { FilesModule } from './files/files.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: true, // al cambiar entidades en codigo se cambian en la DB
     }),
     ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'public') }),
     ProductsModule,
     CommonModule,
     SeedModule,
     FilesModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
