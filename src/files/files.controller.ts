@@ -7,17 +7,32 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
-  HttpCode,
+  Get,
+  Param,
+  Res,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { fileFilter } from './helpers/fileFilter.helper';
 import { diskStorage } from 'multer';
+import { fileNamer, fileFilter } from './helpers';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('files')
 export class FilesController {
-  constructor(private readonly filesService: FilesService) {}
+  constructor(
+    private readonly filesService: FilesService,
+    private readonly configService: ConfigService,
+  ) {}
 
+  @Get('product/:imageName')
+  findProductImage(
+    @Param('imageName') imageName: string,
+    @Res() res: Response,
+  ) {
+    const path = this.filesService.getStatusProductImage(imageName);
+    res.sendFile(path);
+  }
   /**
    * Método para guardar la imágen en el filesystem del proyecto
    * @param file
@@ -29,7 +44,8 @@ export class FilesController {
       fileFilter: fileFilter,
       limits: { fileSize: 500000 },
       storage: diskStorage({
-        destination: './static/uploads',
+        destination: './static/products',
+        filename: fileNamer,
       }),
     }),
   )
@@ -37,7 +53,13 @@ export class FilesController {
     if (!file) {
       throw new BadRequestException('Make sure that the file is an image');
     }
-    return { file: file.originalname };
+    const host_api_raw: string = this.configService.getOrThrow('HOST_API');
+    const port: string = this.configService.getOrThrow('PORT');
+    const host_api = host_api_raw.replaceAll('{PORT}', port);
+    return {
+      originalFileName: file.originalname,
+      secureUrl: `${host_api}/files/product/${file.filename}`,
+    };
   }
 
   /**
@@ -60,7 +82,6 @@ export class FilesController {
     )
     file: Express.Multer.File,
   ) {
-    console.log(file);
     const storeResponse = await this.filesService.upload(
       file.originalname,
       file.buffer,
