@@ -29,6 +29,10 @@ http://localhost:4000/api/seed
 Este proyecto tomo conceptos desde la seccion 10, leccion 121 hasta...
 {insertar cada concepto estudiado en lista aca}
 
+- Para ver las imagenes estaticas publicas ir a:
+  http://localhost:4000/products/{image_name}{image_extension}
+  Por ejemplo, http://localhost:4000/products/1473809-00-A_1_2000.jpg
+
 ## Bonus
 
 ### Nest.js File Upload to AWS S3 + Rate Limiting
