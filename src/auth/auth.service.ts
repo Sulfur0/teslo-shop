@@ -35,20 +35,20 @@ export class AuthService {
     } catch (error) {
       this.handleDBErrors(error);
     }
-    return { ...user, token: this.getJwtToken({ email: user.email }) };
+    return { ...user, token: this.getJwtToken({ id: user.id }) };
   }
 
   async login(loginUserDto: LoginUserDto) {
     const { password, email } = loginUserDto;
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true },
+      select: { email: true, password: true, id: true },
     });
     // Si no existe el usuario o no coincide la contrasenia
     if (!user || !bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException('Credentials are not valid');
     }
-    return { ...user, token: this.getJwtToken({ email: user.email }) };
+    return { ...user, token: this.getJwtToken({ id: user.id }) };
   }
 
   private getJwtToken(payload: JwtPayload) {
