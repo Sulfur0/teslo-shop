@@ -1,3 +1,4 @@
+import { RoleProtected } from './decorators/role-protected/role-protected.decorator';
 import {
   Controller,
   Get,
@@ -6,6 +7,7 @@ import {
   UseGuards,
   Req,
   Headers,
+  SetMetadata,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto, CreateUserDto } from './dto';
@@ -13,6 +15,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
 import { GetUserData, RawHeaders } from './decorators';
 import { IncomingHttpHeaders } from 'http';
+import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { ValidRoles } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -44,6 +48,23 @@ export class AuthController {
       userData,
       rawHeaders,
       headers,
+    };
+  }
+
+  /**
+   * Usado para la autorizacion, es decir validar que el
+   * usuario tenga los roles debidos para acceder al recurso
+   * @param user
+   * @returns
+   */
+  @Get('private2')
+  // @SetMetadata('roles', ['admin', 'super-user'])
+  @RoleProtected(ValidRoles.superUser, ValidRoles.admin, ValidRoles.user)
+  @UseGuards(AuthGuard(), UserRoleGuard)
+  privateRoute2(@GetUserData() user: User) {
+    return {
+      ok: true,
+      user,
     };
   }
 }
