@@ -8,9 +8,12 @@ import {
   Req,
   Headers,
   SetMetadata,
+  Patch,
+  Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto, CreateUserDto } from './dto';
+import { LoginUserDto, CreateUserDto, UpdateUserDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
 import { Auth, GetUserData, RawHeaders } from './decorators';
@@ -25,6 +28,14 @@ export class AuthController {
   @Post('register')
   create(@Body() createAuthDto: CreateUserDto) {
     return this.authService.create(createAuthDto);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.authService.update(id, updateUserDto);
   }
 
   @Post('login')

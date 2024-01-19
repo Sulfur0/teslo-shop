@@ -27,14 +27,12 @@ export class CreateUserDto {
   @MinLength(1)
   fullname: string;
 
-  // por que descomentar esto da error?
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 
-  // @IsBoolean()
-  // @IsOptional()
-  // isActive: string;
-
-  // @IsString({ each: true })
-  // @IsArray()
-  // @IsOptional()
-  // roles: string[];
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  roles?: string[];
 }

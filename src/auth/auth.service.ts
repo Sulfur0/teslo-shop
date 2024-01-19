@@ -2,17 +2,19 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { User } from './entities/user.entity';
 import { LoginUserDto, CreateUserDto } from './dto';
 import { JwtPayload } from './interfaces/jwt-payload.interfaces';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +22,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -36,6 +39,45 @@ export class AuthService {
       this.handleDBErrors(error);
     }
     return { ...user, token: this.getJwtToken({ id: user.id }) };
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    // Create query runner
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      let user: Partial<User> = await queryRunner.manager.findOne(User, {
+        where: { id },
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+
+      // Update user properties based on updateUserDto
+      user = {
+        ...user,
+        ...updateUserDto,
+        password: bcrypt.hashSync(updateUserDto.password, 10),
+      };
+
+      // Save the updated user, remove the password from the response
+      const { password, ...updatedUser } = await queryRunner.manager.save(
+        User,
+        user,
+      );
+
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+
+      return updatedUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
+      this.handleDBErrors(error);
+    }
   }
 
   async login(loginUserDto: LoginUserDto) {
