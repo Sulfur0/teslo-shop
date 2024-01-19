@@ -43,6 +43,12 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
+  @Get('refresh-token')
+  @Auth()
+  refreshToken(@GetUserData() user: User) {
+    return this.authService.refreshToken(user);
+  }
+
   @Get('private')
   @UseGuards(AuthGuard())
   testingPrivateRoute(

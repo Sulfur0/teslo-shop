@@ -8,6 +8,8 @@ import { User } from '../entities/user.entity';
 export const GetUserData = createParamDecorator(
   (data, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest();
+    // para que se pueda extraer el user de la request
+    // el usuario debe estar autenticado
     const user = req.user;
     if (!user)
       throw new InternalServerErrorException('User not found (request)');
