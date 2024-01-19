@@ -1,8 +1,10 @@
+import { Product } from '../../products/entities';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,6 +27,14 @@ export class User {
 
   @Column('text', { array: true, default: ['user'] })
   roles: string[];
+
+  /**
+   * Argumentos:
+   * 1. La otra entidad relacionada con esta
+   * 2. Instancia de la otra tabla, como se relaciona con esta tabla?
+   */
+  @OneToMany(() => Product, (product) => product.user)
+  product: Product;
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

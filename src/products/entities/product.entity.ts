@@ -3,10 +3,12 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductImage } from './product-image.entity';
+import { User } from '../../auth/entities/user.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -44,6 +46,16 @@ export class Product {
     eager: true,
   })
   images?: ProductImage[];
+
+  /**
+   * Argumentos:
+   * 1. La otra entidad relacionada con esta
+   * 2. Instancia de la otra tabla, como se relaciona con esta tabla?
+   * 3. Eager carga automaticamente esta relacion cuando se hagan
+   * consultas (no funciona con querybuilders)
+   */
+  @ManyToOne(() => User, (user) => user.product, { eager: true })
+  user: User;
 
   @BeforeInsert()
   checkSlugInsert() {
