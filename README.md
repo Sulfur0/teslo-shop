@@ -33,6 +33,12 @@ Este proyecto tomo conceptos desde la seccion 10, leccion 121 hasta...
   http://localhost:4000/products/{image_name}{image_extension}
   Por ejemplo, http://localhost:4000/products/1473809-00-A_1_2000.jpg
 
+8. Leer la documentación completa de los endpoints abriendo en el navegador:
+
+```
+http://localhost:4000/api
+```
+
 ## Bonus
 
 ### Nest.js File Upload to AWS S3 + Rate Limiting
