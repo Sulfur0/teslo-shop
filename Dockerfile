@@ -5,7 +5,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
 # RUN yarn install --frozen-lockfile
-RUN npm ci
+# RUN npm ci
+RUN npm install
 
 # Build the app with cache dependencies
 FROM node:18-alpine3.15 AS builder
