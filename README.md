@@ -39,6 +39,8 @@ Este proyecto tomo conceptos desde la seccion 10, leccion 121 hasta...
 http://localhost:4000/api
 ```
 
+9. Production build is served at: https://teslo-shop-production-ae40.up.railway.app
+
 ## Bonus
 
 ### Nest.js File Upload to AWS S3 + Rate Limiting
