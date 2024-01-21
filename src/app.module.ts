@@ -21,6 +21,11 @@ import { WebsocketMessagesModule } from './websocket-messages/websocket-messages
      * https://typeorm.io/data-source-options)
      */
     TypeOrmModule.forRoot({
+      ssl: process.env.STAGE === 'prod',
+      extra: {
+        ssl:
+          process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null,
+      },
       type: 'postgres',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
